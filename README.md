@@ -1,4 +1,4 @@
-# Original author: Commissar[GSF] (Steam)
+## Original author: Commissar[GSF] (Steam)
 
 Some friends wanted to use the mod on the new version of the game,
 but it was causing the game to crash, so they asked me to fix it, which i did.
