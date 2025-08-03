@@ -1,0 +1,2010 @@
+ID = aephiex.built_in_cables
+Name = "The Cable Age Continued"
+Version = 1.2.0
+CompatibleGameVersions = ["0.19.0"]
+ModifiesMultiplayer = true
+Author = "Aephiex, Commissar, trekkie1701c"
+Logo = "logo.png"
+Description =
+	"Our best archaeologist team has uncovered an exciting antique technology: the cables! The ancient people seems to use them to remotely power buildings without involving batteries. This shiny miracle is however quite easy to reproduce and they are now a fundamental part of space ship structures, ending the age of manual battery delivery.\n\n"\
+	"Reactors and Capacitors can now power buildings within a distance. Reactors can also charge capacitors and capacitors will try to balance against themselves.\n\n"\
+	"Reactors have a flow rate higher than their power generation speed, meaning they will slowly fill themselves if power generation is above power consumption and they will be drained if vice versa. Capacitors have a flow rate of 12/s.\n\n"\
+	"Reactors have a supply distance relative to their sizes. Capacitors have a supply distance of 8. The ship designer will display an icon on buildings that require power and are in range of any reactor or capacitor.\n\n"\
+	"This mod is inspired by MMCT and even goes further than that. You don't need to add anything to your ship to automate the battery delivery. It becomes a fundamental feature.\n\n"\
+	"Do NOT enable this mod and MMCT simulteniously. You don't need both at the same time.\n\n"\
+	"WARNING: This mod significantly breaks the balance by eliminating the need of manual battery delivery, rendering 90% of the crews useless. Your fleet size is also less restricted to the maximum number of crews you may have. It's recommended to tune down the crew cap in career mode, or you will have access to larger ships much earlier than expected. Existing ship designs can still be loaded, but they are probably not designed with Built-In Cables mod in mind, rendering them less efficient designs."
+StringsFolder = "strings"
+Actions
+[
+	// ####################################################################################################
+	// # Stats
+	// ####################################################################################################
+
+	{
+        Action = AddMany
+        AddTo = "<gui/game/parts/part_stats.rules>/PartStats"
+        ManyToAdd
+        [
+            {
+                ID = AephiexPowerSupplySpeed
+                FormatKey = "Stats/AephiexPowerSupplySpeed"
+            }
+
+            {
+                ID = AephiexPowerSupplyRange
+                FormatKey = "Stats/AephiexPowerSupplyRange"
+            }
+        ]
+    }
+
+	// ####################################################################################################
+	// # Buff
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<buffs/buffs.rules>/AephiexPowering"
+		CreateIfNotExisting = true
+		Overrides
+		{
+			CombineMode = Max
+			BaseValue = 0%
+
+			Icon
+			{
+				Texture
+				{
+					File = "icons/buff_power.png"
+					MipLevels = 2
+					SampleMode = Linear
+				}
+				Size = [2, 2]
+			}
+
+			RectBorderColor = [10, 212, 98, 160]
+			RectFillColor = [10, 212, 98, 64]
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<buffs/buffs.rules>/AephiexPoweringStorage"
+		CreateIfNotExisting = true
+		Overrides
+		{
+			CombineMode = Max
+			BaseValue = 0%
+
+			Icon
+			{
+				Texture
+				{
+					File = "icons/buff_power.png"
+					MipLevels = 2
+					SampleMode = Linear
+				}
+				Size = [2, 2]
+			}
+
+			RectBorderColor = [10, 212, 98, 160]
+			RectFillColor = [10, 212, 98, 64]
+		}
+	}
+
+	{
+		Action = Add
+		AddTo = "<ships/base_part.rules>/Part/ReceivableBuffs"
+		Name = AephiexPowering
+		ToAdd = AephiexPowering
+	}
+
+	// ####################################################################################################
+	// # reactor_small
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/reactor_small/reactor_small.rules>/Part/Components"
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./Data/ships/terran/reactor_small/reactor_small.rules>/Part/Components/BatteryProducer/Interval/BaseValue) * ((&<stats.rules>/volume_per_delivery) / (&<./Data/ships/terran/reactor_small/reactor_small.rules>/Part/Components/BatteryProducer/ToQuantity/BaseValue)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/reactor_small/reactor_small.rules>/Part/Stats"
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./Data/ships/terran/reactor_small/reactor_small.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./Data/ships/terran/reactor_small/reactor_small.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # reactor_med
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/reactor_med/reactor_med.rules>/Part/Components"
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./Data/ships/terran/reactor_med/reactor_med.rules>/Part/Components/BatteryProducer/Interval/BaseValue) * ((&<stats.rules>/volume_per_delivery) / (&<./Data/ships/terran/reactor_med/reactor_med.rules>/Part/Components/BatteryProducer/ToQuantity/BaseValue)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/reactor_med/reactor_med.rules>/Part/Stats"
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./Data/ships/terran/reactor_med/reactor_med.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./Data/ships/terran/reactor_med/reactor_med.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # reactor_large
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/reactor_large/reactor_large.rules>/Part/Components"
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./Data/ships/terran/reactor_large/reactor_large.rules>/Part/Components/BatteryProducer/Interval/BaseValue) * ((&<stats.rules>/volume_per_delivery) / (&<./Data/ships/terran/reactor_large/reactor_large.rules>/Part/Components/BatteryProducer/ToQuantity/BaseValue)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/reactor_large/reactor_large.rules>/Part/Stats"
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./Data/ships/terran/reactor_large/reactor_large.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./Data/ships/terran/reactor_large/reactor_large.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # Galactic Allegiance: Phantom Reactor
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2879478059/Parts/Power/reactor_phantom/reactor_phantom.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2879478059/Parts/Power/reactor_phantom/reactor_phantom.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2879478059/Parts/Power/reactor_phantom/reactor_phantom.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2879478059/Parts/Power/reactor_phantom/reactor_phantom.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2879478059/Parts/Power/reactor_phantom/reactor_phantom.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2879478059/Parts/Power/reactor_phantom/reactor_phantom.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # Galactic Allegiance: parts lacking uses_power
+	// ####################################################################################################
+
+	{
+		Action = Add
+		AddTo = "<../../../workshop/content/799600/2879478059/Parts/Projectile_Weapons/cannon_gauss/cannon_gauss.rules>/Part/TypeCategories"
+		IgnoreIfNotExisting = true
+		Name = uses_power
+		ToAdd = uses_power
+	}
+
+	{
+		Action = Add
+		AddTo = "<../../../workshop/content/799600/2879478059/Parts/Flight/antigrav_small/antigrav_small.rules>/Part/TypeCategories"
+		IgnoreIfNotExisting = true
+		Name = uses_power
+		ToAdd = uses_power
+	}
+
+	// ####################################################################################################
+	// # Jani's Shipyard: 1x1 reactor
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2880017812/Parts/Power/Reactoraux/reac.txt>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2880017812/Parts/Power/Reactoraux/reac.txt>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2880017812/Parts/Power/Reactoraux/reac.txt>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2880017812/Parts/Power/Reactoraux/reac.txt>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2880017812/Parts/Power/Reactoraux/reac.txt>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2880017812/Parts/Power/Reactoraux/reac.txt>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # Jani's Shipyard: 6x6 reactor
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			// true battery storage
+			BatteryStorageTrue
+			{
+				Type = ResourceStorage
+				ResourceType = battery
+				MaxResources = 128000 // 64000
+				StartingResources = 0
+				SuppliesResources = true
+				MinResourcesPickUp = 4000
+				MaxResourcesPickUp = 4000
+				InitPickUp = 3001
+				PickUpRate = 1000 / 1.2
+				ExpectedResourceGenerationRate = 8000 / (&<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatteryProducer/Interval)
+				ExpectedResourceGenerationToggle = IsProducing
+				SuppliesResourcesToggle = IsProducing
+				IsIntermediateStorage = true
+				ToggleOnResources = 8001
+				ToggleOffResources = 8000
+				DropResourcesWhenDestroyed = false
+				DropResourcesWhenRemoved = false
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/IsOperational/Toggles/2"
+		IgnoreIfNotExisting = true
+		With = { Toggle = BatteryStorageTrue }
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatteryConsumer/Storage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageTrue
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/PlasmaProducer/From/0/Storage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageTrue
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatteryProducer/To/0/Storage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageTrue
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatterySprites1/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageTrue
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Stats/BatterySize"
+		IgnoreIfNotExisting = true
+		With = (&<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatteryStorageTrue/MaxResourcesPickUp) / 1000
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Stats/BatteryFillTime"
+		IgnoreIfNotExisting = true
+		With = 1000 / (&<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatteryStorageTrue/PickUpRate)
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Stats/PowerCapacity"
+		IgnoreIfNotExisting = true
+		With = (&<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatteryStorageTrue/MaxResources) / 1000
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageDoesNotNeedSupply__Aephiex
+			{
+				Type = MultiResourceStorage
+				ResourceType = battery
+				ResourceStorages = [ BatteryStorageTrue ]
+				ReceiveResourceMediaEffects = &/COMMON_EFFECTS/PowerDeliver
+				ToggleOnResources = &<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatteryStorageTrue/ToggleOnResources
+				ToggleOffResources = &<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatteryStorageTrue/ToggleOffResources
+			}
+
+			BatteryStorageNeedsSupply__Aephiex
+			{
+				Type = MultiToggle
+				Toggles
+				[
+					{Toggle = BatteryStorageDoesNotNeedSupply__Aephiex, invert = true}
+				]
+				Mode = All
+			}
+
+			// used to request power
+			BatteryStorage
+			{
+				Type = MultiResourceStorage
+				ResourceType = battery
+				ResourceStorages = [ BatteryStorageTrue ]
+				ReceiveResourceMediaEffects = &/COMMON_EFFECTS/PowerDeliver
+				OperationalToggle = BatteryStorageNeedsSupply__Aephiex
+			}
+
+			// used to supply power
+			BatteryStorageOutgoing__Aephiex
+			{
+				Type = MultiResourceStorage
+				ResourceType = battery
+				ResourceStorages = [ BatteryStorageTrue ]
+				ToggleOnResources = (&<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatteryStorageTrue/ToggleOnResources) + 1000
+				ToggleOffResources = (&<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_Reactor.rules>/Part/Components/BatteryStorageTrue/ToggleOffResources) + 1000
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_reactor.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider__Aephiex : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor__Aephiex : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage__Aephiex : &<component_power_proxy.rules>/CombinedBatteryStorage
+			{
+				ViaBuffs
+				{
+					OutgoingBuffProviders = [BuffProvider__Aephiex, BuffProviderCapacitor__Aephiex]
+					ComponentID = BatteryStorage
+				}
+			}
+
+			CableSubstation
+			{
+				Type = ResourceConverter
+				From
+				[
+					{
+						Storage = BatteryStorageOutgoing__Aephiex
+						Quantity = &<stats.rules>/volume_per_delivery
+						MinQuantityForConversion = &<stats.rules>/volume_per_delivery
+					}
+				]
+				To
+				[
+					{
+						Storage = CombinedBatteryStorage__Aephiex
+						Quantity = &<stats.rules>/volume_per_delivery
+						MinQuantityForConversion = &<stats.rules>/volume_per_delivery
+					}
+				]
+				Interval = (&<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_reactor.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_reactor.rules>/Part/Components/BatteryProducer/To/0/Quantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_reactor.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_reactor.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2880017812/Parts/Power/Fusion Reactor/Fusion_reactor.rules>/Part/Components/BuffProvider__Aephiex/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # Corvettes and Components: 1x1 reactor basic
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2897531503/terran/corvette_reactor_small/corvette_reactor_small.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				FromQuantity = &<stats.rules>/volume_per_delivery
+				ToQuantity = &<stats.rules>/volume_per_delivery
+				Interval = (&<./../../workshop/content/799600/2897531503/terran/corvette_reactor_small/corvette_reactor_small.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2897531503/terran/corvette_reactor_small/corvette_reactor_small.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2897531503/terran/corvette_reactor_small/corvette_reactor_small.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2897531503/terran/corvette_reactor_small/corvette_reactor_small.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2897531503/terran/corvette_reactor_small/corvette_reactor_small.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	{
+		Action = Remove
+		Remove = "<../../../workshop/content/799600/2897531503/terran/corvette_reactor_small/corvette_reactor_small.rules>/Part/Stats/PowerBandwidth"
+		IgnoreIfNotExisting = true
+	}
+
+	// ####################################################################################################
+	// # Corvettes and Components: 1x1 reactor advanced
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2897531503/terran/corvette_reactor_advanced/corvette_reactor_advanced.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				FromQuantity = &<stats.rules>/volume_per_delivery
+				ToQuantity = &<stats.rules>/volume_per_delivery
+				Interval = (&<./../../workshop/content/799600/2897531503/terran/corvette_reactor_advanced/corvette_reactor_advanced.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2897531503/terran/corvette_reactor_advanced/corvette_reactor_advanced.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2897531503/terran/corvette_reactor_advanced/corvette_reactor_advanced.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2897531503/terran/corvette_reactor_advanced/corvette_reactor_advanced.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2897531503/terran/corvette_reactor_advanced/corvette_reactor_advanced.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	{
+		Action = Remove
+		Remove = "<../../../workshop/content/799600/2897531503/terran/corvette_reactor_advanced/corvette_reactor_advanced.rules>/Part/Stats/PowerBandwidth"
+		IgnoreIfNotExisting = true
+	}
+
+	// ####################################################################################################
+	// # Fighters and Components: 1x1 reactor basic
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2894309211/terran/fighter_reactor/fighter_reactor.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2894309211/terran/fighter_reactor/fighter_reactor.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2894309211/terran/fighter_reactor/fighter_reactor.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2894309211/terran/fighter_reactor/fighter_reactor.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2894309211/terran/fighter_reactor/fighter_reactor.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2894309211/terran/fighter_reactor/fighter_reactor.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	{
+		Action = Remove
+		Remove = "<../../../workshop/content/799600/2894309211/terran/fighter_reactor/fighter_reactor.rules>/Part/Stats/PowerBandwidth"
+		IgnoreIfNotExisting = true
+	}
+
+	// ####################################################################################################
+	// # Fighters and Components: 1x1 reactor advanced
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2894309211/terran/fighter_reactor_advanced/fighter_reactor_advanced.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2894309211/terran/fighter_reactor_advanced/fighter_reactor_advanced.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2894309211/terran/fighter_reactor_advanced/fighter_reactor_advanced.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2894309211/terran/fighter_reactor_advanced/fighter_reactor_advanced.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2894309211/terran/fighter_reactor_advanced/fighter_reactor_advanced.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2894309211/terran/fighter_reactor_advanced/fighter_reactor_advanced.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	{
+		Action = Remove
+		Remove = "<../../../workshop/content/799600/2894309211/terran/fighter_reactor_advanced/fighter_reactor_advanced.rules>/Part/Stats/PowerBandwidth"
+		IgnoreIfNotExisting = true
+	}
+
+	// ####################################################################################################
+	// # Fighters and Components: 2x2 reactor + hyperdrive
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	{
+		Action = Remove
+		Remove = "<../../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Stats/PowerBandwidth"
+		IgnoreIfNotExisting = true
+	}
+	// ####################################################################################################
+	// # dpm_reactor_small
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_small/dpm_reactor_small.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpm_reactor_small.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpm_reactor_small.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		IgnoreIfNotExisting = true
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_small/dpm_reactor_small.rules>/Part/Stats"
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpm_reactor_small.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpm_reactor_small.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # dpm_reactor_med
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_med/dpm_reactor_med.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpm_reactor_med.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpm_reactor_med.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_med/dpm_reactor_med.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpm_reactor_med.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpm_reactor_med.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # dpm_reactor_large
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_large/dpm_reactor_large.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpm_reactor_large.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpm_reactor_large.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_large/dpm_reactor_large.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpm_reactor_large.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpm_reactor_large.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+		// ####################################################################################################
+	// # dpmh_reactor_small
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_small/dpmh_reactor_small.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmh_reactor_small.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmh_reactor_small.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		IgnoreIfNotExisting = true
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_small/dpmh_reactor_small.rules>/Part/Stats"
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmh_reactor_small.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmh_reactor_small.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # dpmh_reactor_med
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_med/dpmh_reactor_med.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmh_reactor_med.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmh_reactor_med.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_med/dpmh_reactor_med.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmh_reactor_med.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmh_reactor_med.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # dpmh_reactor_large
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_large/dpmh_reactor_large.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmh_reactor_large.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmh_reactor_large.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_large/dpmh_reactor_large.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmh_reactor_large.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmh_reactor_large.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+		// ####################################################################################################
+	// # dpmc_reactor_small
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_small/dpmc_reactor_small.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmc_reactor_small.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmc_reactor_small.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		IgnoreIfNotExisting = true
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_small/dpmc_reactor_small.rules>/Part/Stats"
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmc_reactor_small.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmc_reactor_small.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # dpmc_reactor_med
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_med/dpmc_reactor_med.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmc_reactor_med.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmc_reactor_med.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_med/dpmc_reactor_med.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmc_reactor_med.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmc_reactor_med.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # dpmc_reactor_large
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_large/dpmc_reactor_large.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmc_reactor_large.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmc_reactor_large.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_large/dpmc_reactor_large.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmc_reactor_large.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmc_reactor_large.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+		// ####################################################################################################
+	// # dpmk_reactor_small
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_small/dpmk_reactor_small.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmk_reactor_small.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmk_reactor_small.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		IgnoreIfNotExisting = true
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_small/dpmk_reactor_small.rules>/Part/Stats"
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmk_reactor_small.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_small/dpmk_reactor_small.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # dpmk_reactor_med
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_med/dpmk_reactor_med.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmk_reactor_med.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmk_reactor_med.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_med/dpmk_reactor_med.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmk_reactor_med.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_med/dpmk_reactor_med.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+	// ####################################################################################################
+	// # dpmk_reactor_large
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_large/dpmk_reactor_large.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
+			}
+
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				Interval = (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmk_reactor_large.rules>/Part/Components/BatteryProducer/Interval) * ((&<stats.rules>/volume_per_delivery) / (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmk_reactor_large.rules>/Part/Components/BatteryProducer/ToQuantity)) * 0.8
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/reactor_large/dpmk_reactor_large.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmk_reactor_large.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./../../workshop/content/799600/2946411143/power/reactor_large/dpmk_reactor_large.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+	// ####################################################################################################
+	// # power_storage
+	// ####################################################################################################
+
+	{
+		Action = Add
+		AddTo = "<ships/terran/power_storage/power_storage.rules>/Part/ReceivableBuffs"
+		Name = AephiexPoweringStorage
+		ToAdd = AephiexPoweringStorage
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/power_storage/power_storage.rules>/Part/Components"
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/capacitor_supply_range) + 1
+				OperationalToggle = IsOperational
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/capacitor_supply_range) + 1
+				OperationalToggle = IsOperational
+			}
+
+			CombinedBatteryStorage : &<component_power_proxy.rules>/CombinedBatteryStorage
+			{
+				AddMode = DistributeRandomly
+			}
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				OperationalToggle = IsOperational
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/power_storage/power_storage.rules>/Part/Stats"
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./Data/ships/terran/power_storage/power_storage.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./Data/ships/terran/power_storage/power_storage.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+
+// ####################################################################################################
+	// # dpm_power_storage
+	// ####################################################################################################
+
+	{
+		Action = Add
+		AddTo = "<../../../workshop/content/799600/2946411143/power/power_storage/power_storage.rules>/Part/ReceivableBuffs"
+		IgnoreIfNotExisting = true
+		Name = AephiexPoweringStorage
+		ToAdd = AephiexPoweringStorage
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/power_storage/power_storage.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BuffProvider : &<component_buff_provider.rules>/BuffProvider
+			{
+				GridDistance = (&<stats.rules>/capacitor_supply_range) + 1
+				OperationalToggle = IsOperational
+			}
+
+			BuffProviderCapacitor : &<component_buff_provider_2.rules>/BuffProviderCapacitor
+			{
+				GridDistance = (&<stats.rules>/capacitor_supply_range) + 1
+				OperationalToggle = IsOperational
+			}
+
+			CombinedBatteryStorage : &<component_power_proxy.rules>/CombinedBatteryStorage
+			{
+				AddMode = DistributeRandomly
+			}
+
+			CableSubstation : &<component_power_distributor.rules>/CableSubstation
+			{
+				OperationalToggle = IsOperational
+			}
+		}
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/power/power_storage/power_storage.rules>/Part/Stats"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			AephiexPowerSupplySpeed = 1 / (&<./Data/ships/terran/power_storage/power_storage.rules>/Part/Components/CableSubstation/Interval) * (&<stats.rules>/volume_per_delivery) / 1000
+			AephiexPowerSupplyRange = (&<./Data/ships/terran/power_storage/power_storage.rules>/Part/Components/BuffProvider/GridDistance) - 1
+		}
+	}
+	// ####################################################################################################
+	// # Hyperdrive Fixed
+	// ####################################################################################################
+
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/hyperdrive_small/hyperdrive_small.rules>/Part/Components"
+		Overrides
+		{
+			BatteryStorageOnline : &<./Data/ships/terran/hyperdrive_small/hyperdrive_small.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./Data/ships/terran/hyperdrive_small/hyperdrive_small.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_small/hyperdrive_small.rules>/Part/Components/FtlDrive/PowerStorage"
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_small/hyperdrive_small.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_small/hyperdrive_small.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_small/hyperdrive_small.rules>/Part/Components/BatterySprites/ResourceStorage"
+		With = BatteryStorageOnline
+	}
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/hyperdrive_med/hyperdrive_med.rules>/Part/Components"
+		Overrides
+		{
+			BatteryStorageOnline : &<./Data/ships/terran/hyperdrive_med/hyperdrive_med.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./Data/ships/terran/hyperdrive_med/hyperdrive_med.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_med/hyperdrive_med.rules>/Part/Components/FtlDrive/PowerStorage"
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_med/hyperdrive_med.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_med/hyperdrive_med.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_med/hyperdrive_med.rules>/Part/Components/BatterySprites/ResourceStorage"
+		With = BatteryStorageOnline
+	}
+	{
+		Action = Overrides
+		OverrideIn = "<ships/terran/hyperdrive_large/hyperdrive_large.rules>/Part/Components"
+		Overrides
+		{
+			BatteryStorageOnline : &<./Data/ships/terran/hyperdrive_large/hyperdrive_large.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./Data/ships/terran/hyperdrive_large/hyperdrive_large.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_large/hyperdrive_large.rules>/Part/Components/FtlDrive/PowerStorage"
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_large/hyperdrive_large.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_large/hyperdrive_large.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<ships/terran/hyperdrive_large/hyperdrive_large.rules>/Part/Components/BatterySprites/ResourceStorage"
+		With = BatteryStorageOnline
+	}
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2886230923/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageOnline : &<./../../workshop/content/799600/2886230923/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2886230923/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2886230923/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/FtlDrive/PowerStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2886230923/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2886230923/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2886230923/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/BatterySprites/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2886361987/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageOnline : &<./../../workshop/content/799600/2886361987/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2886361987/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2886361987/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/FtlDrive/PowerStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2886361987/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2886361987/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2886361987/hyperdrive_medium/hyperdrive_medium.rules>/Part/Components/BatterySprites/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/hyperdrive_small/hyperdrive_small.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageOnline : &<./../../workshop/content/799600/2946411143/hyperdrive_small/hyperdrive_small.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2946411143/hyperdrive_small/hyperdrive_small.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/hyperdrive_small.rules>/Part/Components/FtlDrive/PowerStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/hyperdrive_small.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/hyperdrive_small.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/hyperdrive_small.rules>/Part/Components/BatterySprites/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/hyperdrive_small/dpmhyperdrive_small.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageOnline : &<./../../workshop/content/799600/2946411143/hyperdrive_small/dpmhyperdrive_small.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2946411143/hyperdrive_small/dpmhyperdrive_small.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/dpmhyperdrive_small.rules>/Part/Components/FtlDrive/PowerStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/dpmhyperdrive_small.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/dpmhyperdrive_small.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/dpmhyperdrive_small.rules>/Part/Components/BatterySprites/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/hyperdrive_med/hyperdrive_med.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageOnline : &<./../../workshop/content/799600/2946411143/hyperdrive_med/hyperdrive_med.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2946411143/hyperdrive_med/hyperdrive_med.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_med/hyperdrive_med.rules>/Part/Components/FtlDrive/PowerStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_med/hyperdrive_med.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_med/hyperdrive_med.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_med/hyperdrive_med.rules>/Part/Components/BatterySprites/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/hyperdrive_small/dpmhhyperdrive_small.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageOnline : &<./../../workshop/content/799600/2946411143/hyperdrive_small/dpmhhyperdrive_small.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2946411143/hyperdrive_small/dpmhhyperdrive_small.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/dpmhhyperdrive_small.rules>/Part/Components/FtlDrive/PowerStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/dpmhhyperdrive_small.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/dpmhhyperdrive_small.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/dpmhhyperdrive_small.rules>/Part/Components/BatterySprites/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/hyperdrive_small/kloondpmhhyperdrive_small.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageOnline : &<./../../workshop/content/799600/2946411143/hyperdrive_small/kloondpmhhyperdrive_small.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2946411143/hyperdrive_small/kloondpmhhyperdrive_small.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/kloondpmhhyperdrive_small.rules>/Part/Components/FtlDrive/PowerStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/kloondpmhhyperdrive_small.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/kloondpmhhyperdrive_small.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_small/kloondpmhhyperdrive_small.rules>/Part/Components/BatterySprites/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2946411143/hyperdrive_large/hyperdrive_large.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageOnline : &<./../../workshop/content/799600/2946411143/hyperdrive_large/hyperdrive_large.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2946411143/hyperdrive_large/hyperdrive_large.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_large/hyperdrive_large.rules>/Part/Components/FtlDrive/PowerStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_large/hyperdrive_large.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_large/hyperdrive_large.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2946411143/hyperdrive_large/hyperdrive_large.rules>/Part/Components/BatterySprites/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2897531503/terran/corvette_hyperdrive/corvette_hyperdrive.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageOnline : &<./../../workshop/content/799600/2897531503/terran/corvette_hyperdrive/corvette_hyperdrive.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2897531503/terran/corvette_hyperdrive/corvette_hyperdrive.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2897531503/terran/corvette_hyperdrive/corvette_hyperdrive.rules>/Part/Components/FtlDrive/PowerStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2897531503/terran/corvette_hyperdrive/corvette_hyperdrive.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2897531503/terran/corvette_hyperdrive/corvette_hyperdrive.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2897531503/terran/corvette_hyperdrive/corvette_hyperdrive.rules>/Part/Components/BatterySprites/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2894309211/terran/fighter_hyperdrive/fighter_hyperdrive.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryStorageOnline : &<./../../workshop/content/799600/2894309211/terran/fighter_hyperdrive/fighter_hyperdrive.rules>/Part/Components/BatteryStorage
+			{
+				OperationalToggle = FtlDrive
+			}
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = BatteryStorageOnline
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2894309211/terran/fighter_hyperdrive/fighter_hyperdrive.rules>/Part/Components/BatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2894309211/terran/fighter_hyperdrive/fighter_hyperdrive.rules>/Part/Components/FtlDrive/PowerStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2894309211/terran/fighter_hyperdrive/fighter_hyperdrive.rules>/Part/Components/BatteryStorageCharging/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2894309211/terran/fighter_hyperdrive/fighter_hyperdrive.rules>/Part/Components/BatteryStorageFull/ResourceStorages"
+		IgnoreIfNotExisting = true
+		With = [ BatteryStorageOnline ]
+	}
+
+	{
+		Action = Replace
+		Replace = "<../../../workshop/content/799600/2894309211/terran/fighter_hyperdrive/fighter_hyperdrive.rules>/Part/Components/BatterySprites/ResourceStorage"
+		IgnoreIfNotExisting = true
+		With = BatteryStorageOnline
+	}
+
+	{
+		Action = Overrides
+		OverrideIn = "<../../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Components"
+		IgnoreIfNotExisting = true
+		Overrides
+		{
+			BatteryConvertSystem
+			{
+				Type = ResourceConverter
+				FromStorage = BatteryStorage
+				FromQuantity = 1000
+				ToStorage = FtlBatteryStorage
+				ToQuantity = &FromQuantity
+				Interval = 20 * (&FromQuantity) / (&<./../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Components/FtlBatteryStorage/MaxResources)
+				MinFromQuantityForConversion = &FromQuantity
+				OperationalToggle = FtlDrive
+			}
+		}
+	}
+
+	{
+		Action = Remove
+		Remove = "<../../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Components/BatteryConsumer"
+		IgnoreIfNotExisting = true
+	}
+
+	{
+		Action = Remove
+		Remove = "<../../../workshop/content/799600/2894309211/terran/star_fighter_reactor/star_fighter_reactor.rules>/Part/Components/FtlBatteryConsumer"
+		IgnoreIfNotExisting = true
+	}
+]

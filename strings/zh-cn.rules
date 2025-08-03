@@ -1,0 +1,8 @@
+__Name = "The Cable Age"
+__DebugOnly = false
+
+Stats
+{
+	AephiexPowerSupplySpeed = "<white>供电速率：</white><good>{0:0.##}</good><gray>每秒</gray>"
+	AephiexPowerSupplyRange = "<white>供电距离：</white><good>{0:n0}</good><gray>米</gray>"
+}

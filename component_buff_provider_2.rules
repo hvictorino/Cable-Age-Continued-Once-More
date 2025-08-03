@@ -1,0 +1,7 @@
+BuffProviderCapacitor
+{
+	Type = GridBuffProvider
+	BuffType = AephiexPoweringStorage
+	BuffAmount = 100%
+	GridDistance = 20
+}

@@ -1,0 +1,21 @@
+CableSubstation
+{
+	Type = ResourceConverter
+	From
+	[
+		{
+			Storage = BatteryStorage
+			Quantity = &<stats.rules>/volume_per_delivery
+			MinQuantityForConversion = &<stats.rules>/volume_per_delivery
+		}
+	]
+	To
+	[
+		{
+			Storage = CombinedBatteryStorage
+			Quantity = &<stats.rules>/volume_per_delivery
+			MinQuantityForConversion = &<stats.rules>/volume_per_delivery
+		}
+	]
+	Interval = (&<stats.rules>/volume_per_delivery) / (&<stats.rules>/capacitor_supply_speed)
+}
