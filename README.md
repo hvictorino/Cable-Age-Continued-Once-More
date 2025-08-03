@@ -1,7 +1,7 @@
 ### Fix for the mod 'Cable Age Continued' for Cosmoteer from the author Commissar[GSF] (Steam)
 
-Some friends wanted to use the mod on the new version of the game,
-but it was causing the game to crash, so they asked me to fix it, which i did.
+Wanted to use the mod on the new version of the game,
+but it was causing the game to crash, so i worked around a fix to it.
 
 ### Basic changes that were made for it to work:
 
