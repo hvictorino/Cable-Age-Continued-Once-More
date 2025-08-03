@@ -1,14 +1,53 @@
-CombinedBatteryStorage
+CombinedBatteryStorageSmall
 {
 	Type = MultiResourceStorage
 	ResourceType = battery
 	//ResourceStorages = [BatteryStorage]
 	ResourceStorages = [ BatteryStorage ]
 	SuppliesResources = true
-	MinResourcesPickUp = 4000
-	MaxResourcesPickUp = 4000
-	MinResources = 4000
-	MaxResources = 10000 // 128000
+	MinResourcesPickUp = 1000
+	MaxResourcesPickUp = 1000
+	MaxResources = 8000
+	PickUpRate = 1000 / 0.5
+	ViaBuffs
+	{
+		OutgoingBuffProviders = [BuffProvider, BuffProviderCapacitor]
+		ComponentID = BatteryStorage
+	}
+	AddMode = PrioritizeLeastResources
+	ReceiveResourceMediaEffects = &/COMMON_EFFECTS/PowerDeliver
+}
+
+CombinedBatteryStorageMed
+{
+	Type = MultiResourceStorage
+	ResourceType = battery
+	//ResourceStorages = [BatteryStorage]
+	ResourceStorages = [ BatteryStorage ]
+	SuppliesResources = true
+	MinResourcesPickUp = 2000
+	MaxResourcesPickUp = 2000
+	MaxResources = 16000
+	PickUpRate = 1000 / 0.8
+	ViaBuffs
+	{
+		OutgoingBuffProviders = [BuffProvider, BuffProviderCapacitor]
+		ComponentID = BatteryStorage
+	}
+	AddMode = PrioritizeLeastResources
+	ReceiveResourceMediaEffects = &/COMMON_EFFECTS/PowerDeliver
+}
+
+CombinedBatteryStorageLarge
+{
+	Type = MultiResourceStorage
+	ResourceType = battery
+	//ResourceStorages = [BatteryStorage]
+	ResourceStorages = [ BatteryStorage ]
+	SuppliesResources = true
+	MinResourcesPickUp = 3000
+	MaxResourcesPickUp = 3000
+	MaxResources = 24000
 	PickUpRate = 1000 / 1.2
 	ViaBuffs
 	{

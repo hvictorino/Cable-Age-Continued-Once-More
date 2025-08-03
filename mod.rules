@@ -117,7 +117,7 @@ Actions
 				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageSmall
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -155,7 +155,7 @@ Actions
 				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageMed
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -193,7 +193,7 @@ Actions
 				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageLarge
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -232,7 +232,7 @@ Actions
 				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageSmall
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -292,7 +292,7 @@ Actions
 				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageSmall
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -466,7 +466,7 @@ Actions
 				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage__Aephiex : &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage__Aephiex : &<component_power_proxy.rules>/CombinedBatteryStorageLarge
 			{
 				ViaBuffs
 				{
@@ -530,7 +530,7 @@ Actions
 				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageSmall
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -578,7 +578,7 @@ Actions
 				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageSmall
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -626,7 +626,7 @@ Actions
 				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageSmall
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -672,7 +672,7 @@ Actions
 				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageSmall
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -718,7 +718,7 @@ Actions
 				GridDistance = (&<stats.rules>/small_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageSmall
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -763,7 +763,7 @@ Actions
 				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageMed
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -803,7 +803,7 @@ Actions
 				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageLarge
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -843,7 +843,7 @@ Actions
 				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageLarge
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -882,7 +882,7 @@ Actions
 				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageMed
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -922,7 +922,7 @@ Actions
 				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageLarge
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -962,7 +962,7 @@ Actions
 				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageLarge
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -1001,7 +1001,7 @@ Actions
 				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageMed
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -1041,7 +1041,7 @@ Actions
 				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageLarge
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -1081,7 +1081,7 @@ Actions
 				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageLarge
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -1120,7 +1120,7 @@ Actions
 				GridDistance = (&<stats.rules>/medium_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageMed
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -1160,7 +1160,7 @@ Actions
 				GridDistance = (&<stats.rules>/large_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageLarge
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -1200,7 +1200,7 @@ Actions
 				GridDistance = (&<stats.rules>/massive_reactor_supply_range) + 1
 			}
 
-			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage = &<component_power_proxy.rules>/CombinedBatteryStorageLarge
 
 			CableSubstation : &<component_power_distributor.rules>/CableSubstation
 			{
@@ -1247,7 +1247,7 @@ Actions
 				OperationalToggle = IsOperational
 			}
 
-			CombinedBatteryStorage : &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage : &<component_power_proxy.rules>/CombinedBatteryStorageSmall
 			{
 				AddMode = DistributeRandomly
 			}
@@ -1299,7 +1299,7 @@ Actions
 				OperationalToggle = IsOperational
 			}
 
-			CombinedBatteryStorage : &<component_power_proxy.rules>/CombinedBatteryStorage
+			CombinedBatteryStorage : &<component_power_proxy.rules>/CombinedBatteryStorageSmall
 			{
 				AddMode = DistributeRandomly
 			}
