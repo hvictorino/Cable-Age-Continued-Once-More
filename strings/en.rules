@@ -1,0 +1,5 @@
+Stats
+{
+	AephiexPowerSupplySpeed = "<white>Power Supply Bandwidth: </white><good>{0:0.##}</good><gray>/sek.</gray>"
+	AephiexPowerSupplyRange = "<white>Power Supply Radius: </white><good>{0:n0}</good> <gray>meters</gray>"
+}

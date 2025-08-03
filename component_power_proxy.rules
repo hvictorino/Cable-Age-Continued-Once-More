@@ -1,0 +1,20 @@
+CombinedBatteryStorage
+{
+	Type = MultiResourceStorage
+	ResourceType = battery
+	//ResourceStorages = [BatteryStorage]
+	ResourceStorages = [ BatteryStorage ]
+	SuppliesResources = true
+	MinResourcesPickUp = 4000
+	MaxResourcesPickUp = 4000
+	MinResources = 4000
+	MaxResources = 10000 // 128000
+	PickUpRate = 1000 / 1.2
+	ViaBuffs
+	{
+		OutgoingBuffProviders = [BuffProvider, BuffProviderCapacitor]
+		ComponentID = BatteryStorage
+	}
+	AddMode = PrioritizeLeastResources
+	ReceiveResourceMediaEffects = &/COMMON_EFFECTS/PowerDeliver
+}

@@ -1,0 +1,7 @@
+volume_per_delivery = 500
+small_reactor_supply_range = 5
+medium_reactor_supply_range = 9
+large_reactor_supply_range = 16
+massive_reactor_supply_range = 20
+capacitor_supply_range = 8
+capacitor_supply_speed = 12000  // 1000 means one battery

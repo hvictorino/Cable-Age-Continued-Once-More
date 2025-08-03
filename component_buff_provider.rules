@@ -1,0 +1,11 @@
+BuffProvider
+{
+	Type = GridBuffProvider
+	BuffType = AephiexPowering
+	BuffAmount = 100%
+	GridDistance = 20
+	Criteria
+	{
+		Category = uses_power
+	}
+}
