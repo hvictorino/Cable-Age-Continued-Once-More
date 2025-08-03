@@ -15,18 +15,19 @@ MaxResources
 PickUpRate  
 ```
 
+##### Also created a separate node in the file component_power_proxy.rules for each reactor tier(small, medium and large), each one with the respective ammount of resources and pickupRate
+
 ##### Fixed in the file mod.rules the referenced value of
 
 ```
-(&<./Data/ships/terran/reactor_med/reactor_med.rules>/Part/Components/BatteryProducer/ToQuantity/)
+(&<./Data/ships/terran/reactor_med/reactor_small.rules>/Part/Components/BatteryProducer/ToQuantity/)
 
 ```
 
-to
+##### to
 
 ```
-(&<./Data/ships/terran/reactor_med/reactor_med.rules>/Part/Components/BatteryProducer/ToQuantity/BaseValue)
+(&<./Data/ships/terran/reactor_med/reactor_small.rules>/Part/Components/BatteryProducer/ToQuantity/BaseValue)
 ```
 
-Because it was pointing to a field that was not of a numerical value.
-
+##### Because it was pointing to a field that was not of a numerical value.
