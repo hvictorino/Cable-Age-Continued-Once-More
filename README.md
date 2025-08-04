@@ -3,7 +3,11 @@
 Wanted to use the mod on the new version of the game,
 but it was causing the game to crash, so i worked around a fix to it.
 
-### Basic changes that were made for it to work:
+## Instalation
+
+##### Paste it in the mods folder and play
+
+### Changes made for it to work on 0.30.0:
 
 ##### Added the following fields in the file component_power_proxy.rules
 

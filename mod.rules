@@ -1,9 +1,9 @@
 ID = aephiex.built_in_cables
-Name = "The Cable Age Continued"
-Version = 1.2.0
-CompatibleGameVersions = ["0.19.0"]
+Name = "The Cable Age Continued Once More"
+Version = 1.0.1
+CompatibleGameVersions = ["0.19.0","0.30.0"]
 ModifiesMultiplayer = true
-Author = "Aephiex, Commissar, trekkie1701c"
+Author = "Aephiex, Commissar, trekkie1701c, Bulbas"
 Logo = "logo.png"
 Description =
 	"Our best archaeologist team has uncovered an exciting antique technology: the cables! The ancient people seems to use them to remotely power buildings without involving batteries. This shiny miracle is however quite easy to reproduce and they are now a fundamental part of space ship structures, ending the age of manual battery delivery.\n\n"\
