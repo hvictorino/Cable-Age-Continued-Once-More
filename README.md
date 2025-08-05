@@ -3,7 +3,7 @@
 Wanted to use the mod on the new version of the game,
 but it was causing the game to crash, so i worked around a fix to it.
 
-## Instalation
+## Installation
 
 ##### Paste it in the mods folder and play
 
